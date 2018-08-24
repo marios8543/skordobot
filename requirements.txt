@@ -1,0 +1,3 @@
+discord.py==0.16.12
+aiopg==0.14.0
+uvloop==0.11.0

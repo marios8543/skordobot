@@ -10,9 +10,19 @@ DEFAULT_IMAGE = "https://s3-us-west-2.amazonaws.com/superdeluxe.com/dankland/gen
 store = {}
 
 
+if os.getenv('DATABASE_URL'):
+    dsn = os.environ['DATABASE_URL']
+else:
+    dsn = json.loads(open("config.json","r").read())['dsn']
+if os.getenv('DISCORD_TOKEN'):
+    token = os.environ['DISCORD_TOKEN']
+else:
+    token = json.loads(open("config.json","r").read())['token']
+
+
 @client.event
 async def on_ready():
-    conn = await aiopg.connect(dsn=os.environ['DATABASE_URL'],loop=client.loop)
+    conn = await aiopg.connect(dsn=dsn,loop=client.loop)
     db =  await conn.cursor()
     await db.execute("""
 	CREATE TABLE IF NOT EXISTS recipes (
@@ -36,7 +46,7 @@ async def skordo(ctx):
             return await client.say("Εεε μπομπο δεν εχω σκορδα τι να κανουμε")
         embed = discord.Embed(title=res[0])
         embed.add_field(name="Υλικά",value=res[1],inline=False)
-        embed.add_field(name="Εκτέλεση",value=res[2],inline=False)
+        embed.add_field(name="Εκτέλεση·",value=res[2],inline=False)
         embed.set_thumbnail(url=res[3])
         embed.set_footer(text="Με αγάπη απο τον "+res[4])
         return await client.say(embed=embed)
@@ -72,13 +82,13 @@ async def help():
     >>skordo credits
     -μπομπος
     >>skordo help
-    -αυτο 
+    -αυτο
     """)
 
 @skordo.command()
 async def credits():
     return await client.say("""
-    Με αγαπη και μαλακια απο τον tzatzikiweeb#7687
+    Με αγάπη από τον tzatzikiweeb#7687
     https://gist.github.com/marios8543/b7d8ebaa4c3ca2abc6f8aa6f789cea81
     Requirements & Dependencies:
     - Python 3.5 or higher
@@ -92,13 +102,13 @@ async def search(ctx,*args):
     await store['db'].execute("SELECT title,ingredients,execution,image,author FROM recipes WHERE title LIKE '%{q}%' OR ingredients LIKE '%{q}%'".format(**{'q':query}))
     res = await store['db'].fetchone()
     if res==None:
-        return await client.say("Σορρυ μαν δεν εχω τπτ γ αυτο")
+        return await client.say("Î£Î¿Ï�Ï�Ï… Î¼Î±Î½ Î´ÎµÎ½ ÎµÏ‡Ï‰ Ï„Ï€Ï„ Î³ Î±Ï…Ï„Î¿")
     embed = discord.Embed(title=res[0])
-    embed.add_field(name="Υλικά",value=res[1],inline=False)
-    embed.add_field(name="Εκτέλεση",value=res[2],inline=False)
+    embed.add_field(name="Î¥Î»Î¹ÎºÎ¬",value=res[1],inline=False)
+    embed.add_field(name="Î•ÎºÏ„Î­Î»ÎµÏƒÎ·",value=res[2],inline=False)
     embed.set_thumbnail(url=res[3])
-    embed.set_footer(text="Με αγάπη απο τον "+res[4])
+    embed.set_footer(text="ÎœÎµ Î±Î³Î¬Ï€Î· Î±Ï€Î¿ Ï„Î¿Î½ "+res[4])
     return await client.say(embed=embed)
 
 if __name__=='__main__':
-    client.run(os.environ['discord_token'])
+    client.run(token)
