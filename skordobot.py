@@ -89,7 +89,7 @@ async def help():
 async def credits():
     return await client.say("""
     Με αγάπη από τον tzatzikiweeb#7687
-    https://gist.github.com/marios8543/b7d8ebaa4c3ca2abc6f8aa6f789cea81
+    https://github.com/marios8543/skordobot/
     Requirements & Dependencies:
     - Python 3.5 or higher
     - discord.py (async branch)
@@ -102,12 +102,12 @@ async def search(ctx,*args):
     await store['db'].execute("SELECT title,ingredients,execution,image,author FROM recipes WHERE title LIKE '%{q}%' OR ingredients LIKE '%{q}%'".format(**{'q':query}))
     res = await store['db'].fetchone()
     if res==None:
-        return await client.say("Î£Î¿Ï�Ï�Ï… Î¼Î±Î½ Î´ÎµÎ½ ÎµÏ‡Ï‰ Ï„Ï€Ï„ Î³ Î±Ï…Ï„Î¿")
+        return await client.say("Σορρυ μαν δεν εχω τπτ γ αυτο")
     embed = discord.Embed(title=res[0])
-    embed.add_field(name="Î¥Î»Î¹ÎºÎ¬",value=res[1],inline=False)
-    embed.add_field(name="Î•ÎºÏ„Î­Î»ÎµÏƒÎ·",value=res[2],inline=False)
+    embed.add_field(name="Υλικά",value=res[1],inline=False)
+    embed.add_field(name="Εκτέλεση",value=res[2],inline=False)
     embed.set_thumbnail(url=res[3])
-    embed.set_footer(text="ÎœÎµ Î±Î³Î¬Ï€Î· Î±Ï€Î¿ Ï„Î¿Î½ "+res[4])
+    embed.set_footer(text="Με αγάπη απο τον "+res[4])
     return await client.say(embed=embed)
 
 if __name__=='__main__':
